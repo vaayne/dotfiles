@@ -1,0 +1,19 @@
+{
+    "env": {
+        "PATH": [
+            "/opt/homebrew/bin",
+            "/opt/homebrew/sbin",
+            "/opt/homebrew/opt/mysql-client/bin",
+            "/opt/homebrew/opt/grep/libexec/gnubin",
+            "~/.rye/shims",
+            "~/.jenv/bin",
+            "~/.local/bin",
+            "~/.cargo/bin",
+            "~/.go/bin"
+        ]
+    },
+    "alias": {
+        "ll": "ls -al",
+        "vim": "nvim"
+    }
+}
