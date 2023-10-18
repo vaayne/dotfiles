@@ -1,4 +1,3 @@
-#!/bin/bash
 brew bundle --no-lock --file=/dev/stdin <<EOF
 
 ## Brew
