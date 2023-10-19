@@ -29,8 +29,8 @@ zinit light-mode for \
 # Load basic plugins
 zinit wait lucid light-mode for \
     atinit"zicompinit; zicdreplay" zdharma-continuum/fast-syntax-highlighting \
-    atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions
-# blockf atpull'zinit creinstall -q .' zsh-users/zsh-completions
+    atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions \
+    blockf atpull'zinit creinstall -q .' zsh-users/zsh-completions
 
 # Load starship theme
 # line 1: `starship` binary as command, from github release
