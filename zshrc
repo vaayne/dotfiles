@@ -68,7 +68,9 @@ zinit light sharkdp/bat
 alias cat=bat
 
 # neovim
-zinit ice as"program" from"gh-r" id-as"neovim" extract'!' pick"bin/nvim"
+zinit ice as"program" from"gh-r" id-as"neovim" extract'!' pick"bin/nvim" \
+    atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" \
+    atpull"cd ~/.config/nvim && git pull"
 zinit light neovim/neovim
 alias vim=nvim
 
@@ -119,5 +121,6 @@ zinit light jesseduffield/lazygit
 # https://github.com/nushell/nushell
 zinit ice as"program" from"gh-r" id-as"nu" extract'!' pick"nu"
 zinit light nushell/nushell
+alias nu="nu --config ~/.config/dotfiles/nurc.nu"
 
 # zprof
