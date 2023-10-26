@@ -5,6 +5,7 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
+export PATH="$ZPFX:$PATH"
 
 # homebrew
 export HOMEBREW_NO_AUTO_UPDATE=1 # disable auto update
@@ -16,6 +17,8 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 # set path
 export PATH="$HOME/.local/bin:$PATH" # local bin
 export PATH="$HOME/go/bin:$PATH"     # golang path
+
+PIP_APPS="black httpie pre-commit ruff tldr"
 
 # Load plugins
 # Load a few important annexes, without Turbo
@@ -48,79 +51,84 @@ zinit wait"2" lucid light-mode for \
     OMZL::directories.zsh \
     OMZL::termsupport.zsh \
     OMZL::git.zsh \
-    OMZP::git \
-    OMZP::direnv \
-    OMZP::jenv \
-    OMZP::nvm \
-    OMZP::fzf
+    OMZP::git
 
 # ripgrep
-zinit ice from"gh-r" as"program" id-as"rg" extract'!' pick"rg"
+zinit ice from"gh-r" id-as"rg" extract'!' sbin"rg"
 zinit light BurntSushi/ripgrep
 
+# fzf https://github.com/junegunn/fzf
+zinit ice from"gh-r" id-as"fzf" sbin"fzf"
+zinit light junegunn/fzf
+
 # fd
-zinit ice from"gh-r" as"program" id-as"fd" extract'!' pick"fd"
+zinit ice from"gh-r" id-as"fd" extract'!' sbin"fd"
 zinit light sharkdp/fd
 
 # bat
-zinit ice from"gh-r" as"program" id-as"bat" extract'!' pick"bat"
+zinit ice from"gh-r" id-as"bat" extract'!' sbin"bat"
 zinit light sharkdp/bat
 alias cat=bat
 
+# https://github.com/ogham/exa
+# zinit ice from"gh-r" id-as"exa" extract'!' sbin"exa"
+zinit ice as"command" from"gh-r" id-as"exa" extract'!' pick"exa"
+zinit light ogham/exa
+alias ls=exa
+
+# https://github.com/jqlang/jq
+zinit ice from"gh-r" id-as"jq" mv"jq-* -> jq" sbin"jq"
+zinit light jqlang/jq
+
+# https://github.com/jesseduffield/lazygit
+zinit ice from"gh-r" id-as"lazygit" extract'!' sbin"lazygit"
+zinit light jesseduffield/lazygit
+
+# cloudflared
+zinit ice from"gh-r" id-as"cloudflared" sbin"cloudflared"
+zinit light cloudflare/cloudflared
+
+# https://github.com/nushell/nushell
+zinit ice from"gh-r" id-as"nu" extract'!' sbin"nu"
+zinit light nushell/nushell
+alias nu="nu --config ~/.config/dotfiles/nurc.nu"
+
+# asdf
+zinit ice src'asdf.sh' mv'completions/_asdf -> .'
+zinit light asdf-vm/asdf
+
 # neovim
-zinit ice as"program" from"gh-r" id-as"neovim" extract'!' pick"bin/nvim" \
+zinit ice from"gh-r" id-as"neovim" extract'!' sbin"bin/nvim" \
     atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" \
     atpull"cd ~/.config/nvim && git pull"
 zinit light neovim/neovim
 alias vim=nvim
 
 # python rye
-zinit ice as"program" from"gh-r" id-as"rye" mv"rye* -> rye" pick"rye" \
-    atclone"./rye self completion > _rye;" \
+zinit ice from"gh-r" id-as"rye" mv"rye* -> rye" sbin"rye" \
+    atclone"./rye self completion > _rye" \
     atpull"%atclone"
 zinit light mitsuhiko/rye
 export PATH="$HOME/.rye/shims:$PATH"
 
 # direnv
-zinit ice as"program" from"gh-r" id-as"direnv" mv"direnv* -> direnv" pick"direnv" \
+zinit ice from"gh-r" id-as"direnv" mv"direnv* -> direnv" sbin"direnv" \
     atclone"./direnv hook zsh > init.zsh;" \
     atpull"%atclone" \
     src"init.zsh"
 zinit light direnv/direnv
 
 # carapace completion
-zinit ice as"command" id-as'carapace' from"gh-r" \
+zinit ice id-as'carapace' from"gh-r" sbin"carapace" \
     atclone"./carapace _carapace > init.zsh" \
     atpull"%atclone" src"init.zsh" \
     atload"zicompinit"
 zinit light rsteube/carapace-bin
 
-# atuin completion
-zinit ice as"command" from"gh-r" id-as'atuin' extract='!' \
+# atuin
+zinit ice from"gh-r" id-as'atuin' extract='!' sbin"atuin" \
     atclone"./atuin init zsh > init.zsh" \
-    atpull"%atclone" pick"atuin" src"init.zsh"
+    atpull"%atclone" src"init.zsh"
 zinit light atuinsh/atuin
-
-# navi https://github.com/denisidoro/navi
-zinit ice from"gh-r" as"program" id-as"navi" pick"navi"
-zinit light denisidoro/navi
-
-# https://github.com/ogham/exa
-zinit ice as"program" from"gh-r" id-as"exa" extract'!' pick"bin/exa"
-zinit light ogham/exa
-alias ls=exa
-
-# https://github.com/jqlang/jq
-zinit ice as"program" from"gh-r" id-as"jq" pick"jq"
-zinit light jqlang/jq
-
-# https://github.com/jesseduffield/lazygit
-zinit ice as"program" from"gh-r" id-as"lazygit" extract'!' pick"lazygit"
-zinit light jesseduffield/lazygit
-
-# https://github.com/nushell/nushell
-zinit ice as"program" from"gh-r" id-as"nu" extract'!' pick"nu"
-zinit light nushell/nushell
-alias nu="nu --config ~/.config/dotfiles/nurc.nu"
 
 # zprof
