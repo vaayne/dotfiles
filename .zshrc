@@ -96,6 +96,8 @@ alias nu="nu --config ~/.config/dotfiles/nurc.nu"
 # asdf
 zinit ice src'asdf.sh' mv'completions/_asdf -> .'
 zinit light asdf-vm/asdf
+# asdf java set env
+. ~/.asdf/plugins/java/set-java-home.zsh
 
 # neovim
 zinit ice from"gh-r" id-as"neovim" extract'!' sbin"bin/nvim" \
