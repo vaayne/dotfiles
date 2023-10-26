@@ -91,7 +91,7 @@ zinit light cloudflare/cloudflared
 # https://github.com/nushell/nushell
 zinit ice from"gh-r" id-as"nu" extract'!' sbin"nu"
 zinit light nushell/nushell
-alias nu="nu --config ~/.config/dotfiles/nurc.nu"
+alias nu="nu --config ~/.nurc"
 
 # asdf
 zinit ice src'asdf.sh' mv'completions/_asdf -> .'
