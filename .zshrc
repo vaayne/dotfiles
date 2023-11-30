@@ -60,6 +60,8 @@ zinit light BurntSushi/ripgrep
 # fzf https://github.com/junegunn/fzf
 zinit ice from"gh-r" id-as"fzf" sbin"fzf"
 zinit light junegunn/fzf
+# preview files using fzf
+alias pf="fzf --preview='bat --color=always {}' --preview-window=right:80%:wrap --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
 # fd
 zinit ice from"gh-r" id-as"fd" extract'!' sbin"fd"
@@ -133,4 +135,5 @@ zinit ice from"gh-r" id-as'atuin' extract='!' sbin"atuin" \
     atpull"%atclone" src"init.zsh"
 zinit light atuinsh/atuin
 
+source ~/.localrc
 # zprof
