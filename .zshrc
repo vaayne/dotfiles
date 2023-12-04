@@ -61,7 +61,7 @@ zinit light BurntSushi/ripgrep
 zinit ice from"gh-r" id-as"fzf" sbin"fzf"
 zinit light junegunn/fzf
 # preview files using fzf
-alias pf="fzf --preview='bat --color=always {}' --preview-window=right:80%:wrap --bind shift-up:preview-page-up,shift-down:preview-page-down"
+alias pf="fzf --preview='bat --color=always {}' --previewindow=right:80%:wrap --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
 # fd
 zinit ice from"gh-r" id-as"fd" extract'!' sbin"fd"
@@ -136,4 +136,24 @@ zinit ice from"gh-r" id-as'atuin' extract='!' sbin"atuin" \
 zinit light atuinsh/atuin
 
 source ~/.localrc
+
+function frg {
+  result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
+    fzf --ansi \
+    --color 'hl:-1:underline,hl+:-1:underline:reverse' \
+    --delimiter ':' \
+    --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
+    --previewindow 'up,60%,border-bottom,+{2}+3/3,~3')
+      file=${result%%:*}
+      linenumber=$(echo "${result}" | cut -d: -f2)
+      if [[ -n "$file" ]]; then
+        $EDITOR +"${linenumber}" "$file"
+      fi
+    }
+
+alias llama-start='launchctl load ~/Library/LaunchAgents/cpp.llama.service.plist'
+alias llama-stop='launchctl unload ~/Library/LaunchAgents/cpp.llama.service.plist'
+alias llm='go run ~/.config/dotfiles/main.go'
+
 # zprof
+
