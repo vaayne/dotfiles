@@ -95,12 +95,6 @@ zinit ice from"gh-r" id-as"nu" extract'!' sbin"nu"
 zinit light nushell/nushell
 alias nu="nu --config ~/.nurc"
 
-# asdf
-zinit ice src'asdf.sh' mv'completions/_asdf -> .'
-zinit light asdf-vm/asdf
-# asdf java set env
-. ~/.asdf/plugins/java/set-java-home.zsh
-
 # neovim
 zinit ice from"gh-r" id-as"neovim" extract'!' sbin"bin/nvim" \
     atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" \
@@ -114,6 +108,24 @@ zinit ice from"gh-r" id-as"rye" mv"rye* -> rye" sbin"rye" \
     atpull"%atclone"
 zinit light mitsuhiko/rye
 export PATH="$HOME/.rye/shims:$PATH"
+
+# python uv
+zinit ice from"gh-r" id-as"uv" mv"uv* -> uv" sbin"uv" 
+zinit light astral-sh/uv
+# export PATH="$HOME/.rye/shims:$PATH"
+
+
+# asdf
+zinit ice src'asdf.sh' mv'completions/_asdf -> .'
+zinit light asdf-vm/asdf
+# asdf java set env
+. ~/.asdf/plugins/java/set-java-home.zsh
+
+# rclone
+zinit ice from"gh-r" id-as"rclone" \
+  atclone"rm -f rclone; unzip rclone-v*.zip; mv rclone-v*/rclone ." \
+  mv"rclone-* -> rclone" sbin"rclone"
+zinit light rclone/rclone
 
 # direnv
 zinit ice from"gh-r" id-as"direnv" mv"direnv* -> direnv" sbin"direnv" \
@@ -135,8 +147,6 @@ zinit ice from"gh-r" id-as'atuin' extract='!' sbin"atuin" \
     atpull"%atclone" src"init.zsh"
 zinit light atuinsh/atuin
 
-source ~/.localrc
-
 function frg {
   result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
     fzf --ansi \
@@ -151,9 +161,6 @@ function frg {
       fi
     }
 
-alias llama-start='launchctl load ~/Library/LaunchAgents/cpp.llama.service.plist'
-alias llama-stop='launchctl unload ~/Library/LaunchAgents/cpp.llama.service.plist'
-alias llm='go run ~/.config/dotfiles/main.go'
-
+source ~/.localrc
 # zprof
 
