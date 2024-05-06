@@ -1,5 +1,6 @@
 # zmodload zsh/zprof
 
+# Order of execution of related Ice-mods: atinit -> atpull! -> make'!!' -> mv -> cp -> make! -> atclone/atpull -> make -> (plugin script loading) -> src -> multisrc -> atload.
 # Install Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -18,34 +19,21 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH" # local bin
 export PATH="$HOME/go/bin:$PATH"     # golang path
 
-PIP_APPS="black httpie pre-commit ruff tldr"
-
 # Load plugins
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
-zinit light-mode for \
+zinit lucid light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
     zdharma-continuum/zinit-annex-bin-gem-node \
     zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
+    zdharma-continuum/zinit-annex-rust \
+    from"gh-r" atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" atpull"%atclone" src"init.zsh" sbin'**/starship -> starship' starship/starship
 
 # Load basic plugins
-zinit wait lucid light-mode for \
+zinit wait"2" lucid light-mode for \
     atinit"zicompinit; zicdreplay" zdharma-continuum/fast-syntax-highlighting \
     atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions \
-    blockf atpull'zinit creinstall -q .' zsh-users/zsh-completions
-
-# Load starship theme
-# line 1: `starship` binary as command, from github release
-# line 2: starship setup at clone(create init.zsh, completion)
-# line 3: pull behavior same as clone, source init.zsh
-zinit ice as"command" from"gh-r" \
-    atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-    atpull"%atclone" src"init.zsh"
-zinit light starship/starship
-
-# Load more plugins
-zinit wait"2" lucid light-mode for \
+    blockf atpull'zinit creinstall -q .' zsh-users/zsh-completions \
     OMZL::functions.zsh \
     OMZL::clipboard.zsh \
     OMZL::directories.zsh \
@@ -53,114 +41,55 @@ zinit wait"2" lucid light-mode for \
     OMZL::git.zsh \
     OMZP::git
 
-# ripgrep
-zinit ice from"gh-r" id-as"rg" extract'!' sbin"rg"
-zinit light BurntSushi/ripgrep
+# asdf
+zinit wait lucid light-mode for \
+    src'asdf.sh' id-as'asdf' mv'completions/_asdf -> .' \
+    atclone'./bin/asdf plugin add nodejs; \
+            ./bin/asdf plugin add direnv; \
+            ./bin/asdf plugin add python; \
+            ./bin/asdf plugin add java; \
+            . ~/.asdf/plugins/java/set-java-home.zsh; \
+            ./bin/asdf direnv setup --shell zsh --version latest; \
+            ./bin/asdf direnv install
+            ' \
+    atpull'%atclone' \
+    atload'source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"' \
+    @asdf-vm/asdf
 
-# fzf https://github.com/junegunn/fzf
-zinit ice from"gh-r" id-as"fzf" sbin"fzf"
-zinit light junegunn/fzf
+# Load some binaries as null
+zi wait"4" as"null" lucid from"gh-r" for \
+    sbin'rg' BurntSushi/ripgrep \
+    sbin'bat' @sharkdp/bat \
+    sbin'fd' @sharkdp/fd \
+    sbin'delta' dandavison/delta \
+    sbin'exa' atload"alias ls=exa" ogham/exa \
+    sbin'fzf' junegunn/fzf \
+    sbin'gh' cli/cli \
+    sbin"uv" @astral-sh/uv \
+    sbin'lazygit' jesseduffield/lazygit \
+    sbin'nvim' atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" atpull"cd ~/.config/nvim && git pull" atload"alias vim=nvim" neovim/neovim \
+    sbin"cloudflared" cloudflare/cloudflared \
+    sbin"nu" atload'alias nu="nu --config ~/.nurc"' nushell/nushell \
+    atclone'golangci-lint completion zsh > _golangci-lint' sbin'golangci-lint' @golangci/golangci-lint \
+    sbin"rclone" rclone/rclone \
+    sbin"carapace" atclone"./carapace _carapace > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" carapace-sh/carapace-bin \
+    sbin"atuin" atclone"./atuin init zsh > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" atuinsh/atuin
+
 # preview files using fzf
 alias pf="fzf --preview='bat --color=always {}' --previewindow=right:80%:wrap --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
-# fd
-zinit ice from"gh-r" id-as"fd" extract'!' sbin"fd"
-zinit light sharkdp/fd
-
-# bat
-zinit ice from"gh-r" id-as"bat" extract'!' sbin"bat"
-zinit light sharkdp/bat
-alias cat=bat
-
-# https://github.com/ogham/exa
-# zinit ice from"gh-r" id-as"exa" extract'!' sbin"exa"
-zinit ice as"command" from"gh-r" id-as"exa" extract'!' pick"exa"
-zinit light ogham/exa
-alias ls=exa
-
-# https://github.com/jqlang/jq
-zinit ice from"gh-r" id-as"jq" mv"jq-* -> jq" sbin"jq"
-zinit light jqlang/jq
-
-# https://github.com/jesseduffield/lazygit
-zinit ice from"gh-r" id-as"lazygit" extract'!' sbin"lazygit"
-zinit light jesseduffield/lazygit
-
-# cloudflared
-zinit ice from"gh-r" id-as"cloudflared" sbin"cloudflared"
-zinit light cloudflare/cloudflared
-
-# https://github.com/nushell/nushell
-zinit ice from"gh-r" id-as"nu" extract'!' sbin"nu"
-zinit light nushell/nushell
-alias nu="nu --config ~/.nurc"
-
-# neovim
-zinit ice from"gh-r" id-as"neovim" extract'!' sbin"bin/nvim" \
-    atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" \
-    atpull"cd ~/.config/nvim && git pull"
-zinit light neovim/neovim
-alias vim=nvim
-
-# python rye
-zinit ice from"gh-r" id-as"rye" mv"rye* -> rye" sbin"rye" \
-    atclone"./rye self completion > _rye" \
-    atpull"%atclone"
-zinit light mitsuhiko/rye
-export PATH="$HOME/.rye/shims:$PATH"
-
-# python uv
-zinit ice from"gh-r" id-as"uv" mv"uv* -> uv" sbin"uv" 
-zinit light astral-sh/uv
-# export PATH="$HOME/.rye/shims:$PATH"
-
-
-# asdf
-zinit ice src'asdf.sh' mv'completions/_asdf -> .'
-zinit light asdf-vm/asdf
-# asdf java set env
-. ~/.asdf/plugins/java/set-java-home.zsh
-
-# rclone
-zinit ice from"gh-r" id-as"rclone" \
-  atclone"rm -f rclone; unzip rclone-v*.zip; mv rclone-v*/rclone ." \
-  mv"rclone-* -> rclone" sbin"rclone"
-zinit light rclone/rclone
-
-# direnv
-zinit ice from"gh-r" id-as"direnv" mv"direnv* -> direnv" sbin"direnv" \
-    atclone"./direnv hook zsh > init.zsh;" \
-    atpull"%atclone" \
-    src"init.zsh"
-zinit light direnv/direnv
-
-# carapace completion
-zinit ice id-as'carapace' from"gh-r" sbin"carapace" \
-    atclone"./carapace _carapace > init.zsh" \
-    atpull"%atclone" src"init.zsh" \
-    atload"zicompinit"
-zinit light rsteube/carapace-bin
-
-# atuin
-zinit ice from"gh-r" id-as'atuin' extract='!' sbin"atuin" \
-    atclone"./atuin init zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh"
-zinit light atuinsh/atuin
-
 function frg {
-  result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
-    fzf --ansi \
-    --color 'hl:-1:underline,hl+:-1:underline:reverse' \
-    --delimiter ':' \
-    --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
-    --previewindow 'up,60%,border-bottom,+{2}+3/3,~3')
-      file=${result%%:*}
-      linenumber=$(echo "${result}" | cut -d: -f2)
-      if [[ -n "$file" ]]; then
+    result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
+        fzf --ansi \
+            --color 'hl:-1:underline,hl+:-1:underline:reverse' \
+            --delimiter ':' \
+            --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
+            --previewindow 'up,60%,border-bottom,+{2}+3/3,~3')
+    file=${result%%:*}
+    linenumber=$(echo "${result}" | cut -d: -f2)
+    if [[ -n "$file" ]]; then
         $EDITOR +"${linenumber}" "$file"
-      fi
-    }
+    fi
+}
 
-source ~/.localrc
 # zprof
-
