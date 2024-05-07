@@ -67,11 +67,12 @@ zi wait"4" as"null" lucid from"gh-r" for \
     sbin'gh' cli/cli \
     sbin"uv" @astral-sh/uv \
     sbin'lazygit' jesseduffield/lazygit \
-    sbin'nvim' atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" atpull"cd ~/.config/nvim && git pull" atload"alias vim=nvim" neovim/neovim \
+    sbin'nvim' atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" atpull"cd ~/.config/nvim && git pull" atload"alias vim=nvim; export EDITOR=nvim" neovim/neovim \
     sbin"cloudflared" cloudflare/cloudflared \
     sbin"nu" atload'alias nu="nu --config ~/.nurc"' nushell/nushell \
     atclone'golangci-lint completion zsh > _golangci-lint' sbin'golangci-lint' @golangci/golangci-lint \
     sbin"rclone" rclone/rclone \
+    sbin"devpod" mv"devpod* -> devpod" loft-sh/devpod \
     sbin"carapace" atclone"./carapace _carapace > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" carapace-sh/carapace-bin \
     sbin"atuin" atclone"./atuin init zsh > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" atuinsh/atuin
 
@@ -93,3 +94,6 @@ function frg {
 }
 
 # zprof
+
+# source localrc
+[ -f ~/.localrc ] && source ~/.localrc
