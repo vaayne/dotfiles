@@ -48,12 +48,11 @@ zinit wait lucid light-mode for \
             ./bin/asdf plugin add direnv; \
             ./bin/asdf plugin add python; \
             ./bin/asdf plugin add java; \
-            . ~/.asdf/plugins/java/set-java-home.zsh; \
             ./bin/asdf direnv setup --shell zsh --version latest; \
             ./bin/asdf direnv install
             ' \
     atpull'%atclone' \
-    atload'source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"' \
+    atload'source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc";. ~/.asdf/plugins/java/set-java-home.zsh' \
     @asdf-vm/asdf
 
 # Load some binaries as null
@@ -72,7 +71,7 @@ zi wait"4" as"null" lucid from"gh-r" for \
     sbin"nu" atload'alias nu="nu --config ~/.nurc"' nushell/nushell \
     atclone'golangci-lint completion zsh > _golangci-lint' sbin'golangci-lint' @golangci/golangci-lint \
     sbin"rclone" rclone/rclone \
-    sbin"devpod" mv"devpod* -> devpod" loft-sh/devpod \
+    sbin"devpod" mv"devpod* -> devpod" atclone"./devpod completion zsh > init.zsh" src"init.zsh" atload"zicompinit" loft-sh/devpod \
     sbin"carapace" atclone"./carapace _carapace > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" carapace-sh/carapace-bin \
     sbin"atuin" atclone"./atuin init zsh > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" atuinsh/atuin
 
