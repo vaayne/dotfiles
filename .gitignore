@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.direnv
+.envrc
+.vscode/
+.idea/
+temp/
+.tool-versions
