@@ -48,11 +48,12 @@ zinit wait lucid light-mode for \
             ./bin/asdf plugin add direnv; \
             ./bin/asdf plugin add python; \
             ./bin/asdf plugin add java; \
+            ./bin/asdf plugin add golang; \
             ./bin/asdf direnv setup --shell zsh --version latest; \
             ./bin/asdf direnv install
             ' \
     atpull'%atclone' \
-    atload'source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc";. ~/.asdf/plugins/java/set-java-home.zsh' \
+    atload'source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc";. ~/.asdf/plugins/java/set-java-home.zsh; . ~/.asdf/plugins/golang/set-env.zsh' \
     @asdf-vm/asdf
 
 # Load some binaries as null
@@ -65,6 +66,7 @@ zi wait"4" as"null" lucid from"gh-r" for \
     sbin'fzf' junegunn/fzf \
     sbin'gh' cli/cli \
     sbin"uv" @astral-sh/uv \
+    sbin"yt-dlp" mv"yt-dlp* -> yt-dlp" yt-dlp/yt-dlp \
     sbin'lazygit' jesseduffield/lazygit \
     sbin'nvim' atclone"git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" atpull"cd ~/.config/nvim && git pull" atload"alias vim=nvim; export EDITOR=nvim" neovim/neovim \
     sbin"cloudflared" cloudflare/cloudflared \
