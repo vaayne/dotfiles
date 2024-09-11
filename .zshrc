@@ -11,7 +11,7 @@ export PATH="$ZPFX:$PATH"
 # homebrew
 export HOMEBREW_NO_AUTO_UPDATE=1 # disable auto update
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export PATH="/opt/homebrew/opt/mysql-client@8.0/bin:$PATH"
 export PATH="/opt/homebrew/opt/grep/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 
@@ -75,18 +75,18 @@ zi wait"4" as"null" lucid from"gh-r" for \
     sbin"rclone" rclone/rclone \
     sbin"devpod" mv"devpod* -> devpod" atclone"./devpod completion zsh > init.zsh" src"init.zsh" atload"zicompinit" loft-sh/devpod \
     sbin"carapace" atclone"./carapace _carapace > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" carapace-sh/carapace-bin \
-    sbin"atuin" atclone"./atuin init zsh > init.zsh" atpull"%atclone" src"init.zsh" atload"zicompinit" atuinsh/atuin
+    sbin"atuin" bpick"atuin-*.tar.gz" mv"atuin*/atuin -> atuin" atclone"./atuin init zsh > init.zsh; ./atuin gen-completions --shell zsh > _atuin" atpull"%atclone" src"init.zsh" atuinsh/atuin
 
 # preview files using fzf
-alias pf="fzf --preview='bat --color=always {}' --previewindow=right:80%:wrap --bind shift-up:preview-page-up,shift-down:preview-page-down"
+alias pf="fzf --preview='bat --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down"
+alias cat="bat --style=plain"
 
 function frg {
     result=$(rg --ignore-case --color=always --line-number --no-heading "$@" |
         fzf --ansi \
             --color 'hl:-1:underline,hl+:-1:underline:reverse' \
             --delimiter ':' \
-            --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
-            --previewindow 'up,60%,border-bottom,+{2}+3/3,~3')
+            --preview "bat --color=always {1} --theme='Solarized (light)' --highlight-line {2}")
     file=${result%%:*}
     linenumber=$(echo "${result}" | cut -d: -f2)
     if [[ -n "$file" ]]; then
