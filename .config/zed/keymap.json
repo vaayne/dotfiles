@@ -1,0 +1,32 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "bindings": {
+      "super-i": "assistant::InlineAssist",
+      "super-[": "pane::GoBack",
+      "super-]": "pane::GoForward"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-`": "workspace::ToggleLeftDock"
+      // "cmd-`": "workspace::ToggleRightDock",
+      // "ctrl-`": "workspace::ToggleBottomDock"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      // "j k": ["workspace::SendKeystrokes", "escape"]
+      "cmd-shift-[": "editor::Outdent",
+      "cmd-shift-]": "editor::Indent"
+    }
+  }
+]
